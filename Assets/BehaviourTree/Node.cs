@@ -10,13 +10,10 @@ public class Node
         RUNNING,
         FAILURE
     };
-
+    
     public Status status;
-
     public List<Node> children = new List<Node>();
-
     public int currentChild = 0;
-
     public string name;
 
     public Node()
