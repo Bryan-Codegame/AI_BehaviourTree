@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class RobberBehaviour : MonoBehaviour
 {
     private BehaviourTree tree;
+    public GameObject door;
     public GameObject diamond;
     public GameObject van;
     private NavMeshAgent agent;
@@ -16,6 +17,8 @@ public class RobberBehaviour : MonoBehaviour
         WORKING
     }
     private ActionState state = ActionState.IDLE;
+
+    private Node.Status treeStatus = Node.Status.RUNNING;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,20 +26,27 @@ public class RobberBehaviour : MonoBehaviour
         
         tree = new BehaviourTree();
         
-        Node steal = new Node("Steal Something");
+        Sequence steal = new Sequence("Steal Something");
+        Leaf goToDoor = new Leaf("Go To Door", GoToDoor);
         Leaf goToDiammond = new Leaf("Go To Diamond", GoToDiamond);
         Leaf goToVan = new Leaf("Go To Van", GoToVan);
         
+        steal.AddChild(goToDoor);
         steal.AddChild(goToDiammond);
+        steal.AddChild(goToDoor);
         steal.AddChild(goToVan);
         tree.AddChild(steal);
         
         tree.PrintTree();
-
-        tree.Process();
     }
 
     //AGENT ACTIONS
+    
+    public Node.Status GoToDoor()
+    {
+        return GoToLocation(door.transform.position);
+    }
+    
     public Node.Status GoToDiamond()
     {
         return GoToLocation(diamond.transform.position);
@@ -74,10 +84,10 @@ public class RobberBehaviour : MonoBehaviour
         return Node.Status.RUNNING;
     }
     
-
     // Update is called once per frame
     void Update()
     {
-        
+        if (treeStatus == Node.Status.RUNNING)
+            treeStatus = tree.Process();
     }
 }

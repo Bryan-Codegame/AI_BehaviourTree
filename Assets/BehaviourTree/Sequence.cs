@@ -22,7 +22,7 @@ public class Sequence : Node
             return Status.SUCCESS;
         }
 
-        return Status.SUCCESS;
+        return Status.RUNNING;
     }
     
 }
