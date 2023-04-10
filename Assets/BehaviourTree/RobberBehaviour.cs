@@ -6,10 +6,12 @@ using UnityEngine.AI;
 public class RobberBehaviour : MonoBehaviour
 {
     private BehaviourTree tree;
-    public GameObject door;
     public GameObject diamond;
     public GameObject van;
     private NavMeshAgent agent;
+    //We use both doors because the agent has to select the door where he want to enter to.
+    public GameObject backDoor;
+    public GameObject frontDoor;
 
     public enum ActionState
     {
@@ -19,6 +21,7 @@ public class RobberBehaviour : MonoBehaviour
     private ActionState state = ActionState.IDLE;
 
     private Node.Status treeStatus = Node.Status.RUNNING;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -27,13 +30,17 @@ public class RobberBehaviour : MonoBehaviour
         tree = new BehaviourTree();
         
         Sequence steal = new Sequence("Steal Something");
-        Leaf goToDoor = new Leaf("Go To Door", GoToDoor);
+        //We need to use backdoor and frontdoor inside of a selector
+        Leaf goToBackDoor = new Leaf("Go To Door", GoToBackDoor);
+        Leaf goToFrontDoor = new Leaf("Go To Door", GoToFrontDoor);
+        
         Leaf goToDiammond = new Leaf("Go To Diamond", GoToDiamond);
         Leaf goToVan = new Leaf("Go To Van", GoToVan);
         
-        steal.AddChild(goToDoor);
+        //Steps that the agent follow
+        steal.AddChild(goToBackDoor);
         steal.AddChild(goToDiammond);
-        steal.AddChild(goToDoor);
+        steal.AddChild(goToBackDoor);
         steal.AddChild(goToVan);
         tree.AddChild(steal);
         
@@ -42,11 +49,16 @@ public class RobberBehaviour : MonoBehaviour
 
     //AGENT ACTIONS
     
-    public Node.Status GoToDoor()
+    public Node.Status GoToBackDoor()
     {
-        return GoToLocation(door.transform.position);
+        return GoToLocation(backDoor.transform.position);
     }
-    
+
+    public Node.Status GoToFrontDoor()
+    {
+        return GoToLocation(frontDoor.transform.position);
+    }
+
     public Node.Status GoToDiamond()
     {
         return GoToLocation(diamond.transform.position);

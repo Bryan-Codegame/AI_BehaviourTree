@@ -1969,6 +1969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09778580fdb4ad548a114553f2f769b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  door: {fileID: 919599686}
   diamond: {fileID: 1550492363}
   van: {fileID: 2135263251}
 --- !u!1 &716268924
