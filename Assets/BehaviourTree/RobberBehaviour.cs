@@ -30,18 +30,25 @@ public class RobberBehaviour : MonoBehaviour
         tree = new BehaviourTree();
         
         Sequence steal = new Sequence("Steal Something");
+        Selector openDoor = new Selector("Open Door");
         //We need to use backdoor and frontdoor inside of a selector
-        Leaf goToBackDoor = new Leaf("Go To Door", GoToBackDoor);
-        Leaf goToFrontDoor = new Leaf("Go To Door", GoToFrontDoor);
+        Leaf goToBackDoor = new Leaf("Go To BackDoor", GoToBackDoor);
+        Leaf goToFrontDoor = new Leaf("Go To FrontDoor", GoToFrontDoor);
         
         Leaf goToDiammond = new Leaf("Go To Diamond", GoToDiamond);
         Leaf goToVan = new Leaf("Go To Van", GoToVan);
         
-        //Steps that the agent follow
-        steal.AddChild(goToBackDoor);
+        //Selector
+        openDoor.AddChild(goToBackDoor); //Choose this at first because of the order
+        openDoor.AddChild(goToFrontDoor);
+        
+        //Sequence
+        steal.AddChild(openDoor);
         steal.AddChild(goToDiammond);
-        steal.AddChild(goToBackDoor);
+        //steal.AddChild(goToBackDoor);
         steal.AddChild(goToVan);
+        
+        //Behaviour Tree
         tree.AddChild(steal);
         
         tree.PrintTree();
