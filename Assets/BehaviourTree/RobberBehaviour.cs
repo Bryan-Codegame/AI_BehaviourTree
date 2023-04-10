@@ -13,21 +13,34 @@ public class RobberBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        agent = this.GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
         
         tree = new BehaviourTree();
         Node steal = new Node("Steal Something");
-        Node goToDiammond = new Node("Go To Diamond");
-        Node goToVan = new Node("Go To Van");
+        Leaf goToDiammond = new Leaf("Go To Diamond", GoToDiamond);
+        Leaf goToVan = new Leaf("Go To Van", GoToVan);
         
         steal.AddChild(goToDiammond);
         steal.AddChild(goToVan);
         tree.AddChild(steal);
         
         tree.PrintTree();
-        
+
+        tree.Process();
+    }
+
+    public Node.Status GoToDiamond()
+    {
         //The agent goes to the diamond.
         agent.SetDestination(diamond.transform.position);
+        return Node.Status.SUCCESS;
+    }
+    
+    public Node.Status GoToVan()
+    {
+        //The agent goes to the diamond.
+        agent.SetDestination(van.transform.position);
+        return Node.Status.RUNNING;
     }
 
     // Update is called once per frame

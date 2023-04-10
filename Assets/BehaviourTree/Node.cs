@@ -26,7 +26,7 @@ public class Node
 
     public virtual Status Process()
     {
-        return Status.SUCCESS;
+        return children[currentChild].Process();
     }
     
     public void AddChild(Node n)
