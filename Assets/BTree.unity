@@ -1950,7 +1950,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 10
+  m_Speed: 8
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1974,12 +1974,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09778580fdb4ad548a114553f2f769b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  state: 0
+  treeStatus: 1
   diamond: {fileID: 1550492363}
   van: {fileID: 2135263251}
   attachPos: {fileID: 504658317}
   backDoor: {fileID: 919599686}
   frontDoor: {fileID: 1791870521}
-  money: 195
+  money: 582
 --- !u!1 &716268924
 GameObject:
   m_ObjectHideFlags: 0

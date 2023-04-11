@@ -3,37 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class RobberBehaviour : MonoBehaviour
+public class RobberBehaviour : BTAgent
 {
     private const int DIAMOND_PRICE = 100;
     
-    private BehaviourTree tree;
     public GameObject diamond;
     public GameObject van;
     public Transform attachPos;
     
-    private NavMeshAgent agent;
     //We use both doors because the agent has to select the door where he want to enter to.
     public GameObject backDoor;
     public GameObject frontDoor;
-
-    public enum ActionState
-    {
-        IDLE,
-        WORKING
-    }
-    private ActionState state = ActionState.IDLE;
-
-    private Node.Status treeStatus = Node.Status.RUNNING;
-
+    
     [Range(0, 1000)] public int money = 800;
     
-    // Start is called before the first frame update
-    void Start()
+    // This Start() is not the same of BTAgent's Start(), that is the reason why we use "new" keyword
+    new void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        
-        tree = new BehaviourTree();
+        base.Start();
         
         Sequence steal = new Sequence("Steal Something");
         Selector openDoor = new Selector("Open Door");
@@ -133,7 +120,7 @@ public class RobberBehaviour : MonoBehaviour
         }
     }
     
-    Node.Status GoToLocation(Vector3 destination)
+    new Node.Status GoToLocation(Vector3 destination)
     {
         //Distance between destination (Diamond or Van) and agent's position 
         float distanceToTarget = Vector3.Distance(destination, transform.position);
@@ -159,14 +146,6 @@ public class RobberBehaviour : MonoBehaviour
         return Node.Status.RUNNING;
     }
     
-    // Update is called once per frame
-    void Update()
-    {
-        /*if Equals to SUCCESS because hasGotMoney has to return Success so that
-         the agent can start to steal
-         */
-        //If agent needs money
-        if (treeStatus != Node.Status.SUCCESS)
-            treeStatus = tree.Process();
-    }
+    //Update?
+    //it has not update method because it's parent has.
 }

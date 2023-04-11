@@ -26,7 +26,6 @@ public class BTAgent : MonoBehaviour
     }
     
     //SET STATUS
-    
     public Node.Status GoToLocation(Vector3 destination)
     {
         //Distance between destination (Diamond or Van) and agent's position 
