@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class RobberBehaviour : MonoBehaviour
 {
+    private const int DIAMOND_PRICE = 100;
+    
     private BehaviourTree tree;
     public GameObject diamond;
     public GameObject van;
@@ -15,8 +17,6 @@ public class RobberBehaviour : MonoBehaviour
     public GameObject backDoor;
     public GameObject frontDoor;
 
-    private bool isPickup;
-    
     public enum ActionState
     {
         IDLE,
@@ -37,6 +37,10 @@ public class RobberBehaviour : MonoBehaviour
         
         Sequence steal = new Sequence("Steal Something");
         Selector openDoor = new Selector("Open Door");
+        
+        //This si a conditional to the agent proceed with the sequence.
+        Leaf hasGotMoney = new Leaf("Has Got Money", HasMoney);
+       
         //We need to use backdoor and frontdoor inside of a selector
         Leaf goToBackDoor = new Leaf("Go To BackDoor", GoToBackDoor);
         Leaf goToFrontDoor = new Leaf("Go To FrontDoor", GoToFrontDoor);
@@ -49,9 +53,9 @@ public class RobberBehaviour : MonoBehaviour
         openDoor.AddChild(goToBackDoor);
         
         //Sequence
-        steal.AddChild(openDoor);
+        steal.AddChild(hasGotMoney); //Conditional if agent does not have money, then he proceed to steal
+        steal.AddChild(openDoor); //selector
         steal.AddChild(goToDiammond);
-        //steal.AddChild(goToBackDoor);
         steal.AddChild(goToVan);
         
         //Behaviour Tree
@@ -62,6 +66,15 @@ public class RobberBehaviour : MonoBehaviour
 
     //AGENT ACTIONS
 
+    public Node.Status HasMoney()
+    {
+        if (money >= 500)
+        {
+            return Node.Status.FAILURE;
+        }
+
+        return Node.Status.SUCCESS;
+    }
     public Node.Status GoToBackDoor()
     {
         return GoToDoor(backDoor);
@@ -77,7 +90,6 @@ public class RobberBehaviour : MonoBehaviour
         Node.Status s = GoToLocation(diamond.transform.position);
         if (s == Node.Status.SUCCESS)
         {
-            isPickup = true;
             //diamond.transform.SetParent(attachPos);
             diamond.transform.parent = attachPos;
         }
@@ -86,7 +98,13 @@ public class RobberBehaviour : MonoBehaviour
     
     public Node.Status GoToVan()
     {
-        return GoToLocation(van.transform.position);
+        Node.Status s = GoToLocation(van.transform.position);
+        if (s == Node.Status.SUCCESS)
+        {
+            Destroy(diamond);
+            money += DIAMOND_PRICE;
+        }
+        return s;
     }
 
     //SET STATUS
@@ -139,7 +157,11 @@ public class RobberBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (treeStatus == Node.Status.RUNNING)
+        /*if Equals to SUCCESS because hasGotMoney has to return Success so that
+         the agent can start to steal
+         */
+        //If agent needs money
+        if (treeStatus != Node.Status.SUCCESS)
             treeStatus = tree.Process();
     }
 }
