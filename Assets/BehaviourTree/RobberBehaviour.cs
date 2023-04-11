@@ -8,11 +8,15 @@ public class RobberBehaviour : MonoBehaviour
     private BehaviourTree tree;
     public GameObject diamond;
     public GameObject van;
+    public Transform attachPos;
+    
     private NavMeshAgent agent;
     //We use both doors because the agent has to select the door where he want to enter to.
     public GameObject backDoor;
     public GameObject frontDoor;
 
+    private bool isPickup;
+    
     public enum ActionState
     {
         IDLE,
@@ -21,6 +25,8 @@ public class RobberBehaviour : MonoBehaviour
     private ActionState state = ActionState.IDLE;
 
     private Node.Status treeStatus = Node.Status.RUNNING;
+
+    [Range(0, 1000)] public int money = 800;
     
     // Start is called before the first frame update
     void Start()
@@ -39,8 +45,8 @@ public class RobberBehaviour : MonoBehaviour
         Leaf goToVan = new Leaf("Go To Van", GoToVan);
         
         //Selector
-        openDoor.AddChild(goToBackDoor); //Choose this at first because of the order
-        openDoor.AddChild(goToFrontDoor);
+        openDoor.AddChild(goToFrontDoor); //Choose this at first because of the order
+        openDoor.AddChild(goToBackDoor);
         
         //Sequence
         steal.AddChild(openDoor);
@@ -55,20 +61,27 @@ public class RobberBehaviour : MonoBehaviour
     }
 
     //AGENT ACTIONS
-    
+
     public Node.Status GoToBackDoor()
     {
-        return GoToLocation(backDoor.transform.position);
+        return GoToDoor(backDoor);
     }
 
     public Node.Status GoToFrontDoor()
     {
-        return GoToLocation(frontDoor.transform.position);
+        return GoToDoor(frontDoor);
     }
 
     public Node.Status GoToDiamond()
     {
-        return GoToLocation(diamond.transform.position);
+        Node.Status s = GoToLocation(diamond.transform.position);
+        if (s == Node.Status.SUCCESS)
+        {
+            isPickup = true;
+            //diamond.transform.SetParent(attachPos);
+            diamond.transform.parent = attachPos;
+        }
+        return s;
     }
     
     public Node.Status GoToVan()
@@ -77,6 +90,26 @@ public class RobberBehaviour : MonoBehaviour
     }
 
     //SET STATUS
+    public Node.Status GoToDoor(GameObject door)
+    {
+        Node.Status s = GoToLocation(door.transform.position);
+        //If agent gets to the door
+        if (s == Node.Status.SUCCESS)
+        {
+            if (!door.GetComponent<Lock>().isLocked)
+            {
+                door.SetActive(false);
+                return Node.Status.SUCCESS;
+            }
+            //If it is failure, select next child, in other words, slect other door
+            return Node.Status.FAILURE;
+        }
+        else
+        {
+            return s;
+        }
+    }
+    
     Node.Status GoToLocation(Vector3 destination)
     {
         //Distance between destination (Diamond or Van) and agent's position 
