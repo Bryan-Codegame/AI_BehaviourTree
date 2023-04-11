@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//This node is just to show how invert the status returned by a child
+//This node is just to show how invert the status returned by a child to make more sense the manage of status
 public class Inverter : Node
 {
     public Inverter(string n)

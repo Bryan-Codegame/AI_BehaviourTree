@@ -37,8 +37,9 @@ public class RobberBehaviour : MonoBehaviour
         
         Sequence steal = new Sequence("Steal Something");
         Selector openDoor = new Selector("Open Door");
+        Inverter invertHasMoney = new Inverter("Invert Has Money");
         
-        //This si a conditional to the agent proceed with the sequence.
+        //This si a conditional if it is SUCCESS, the agent proceed with the sequence.
         Leaf hasGotMoney = new Leaf("Has Got Money", HasMoney);
        
         //We need to use backdoor and frontdoor inside of a selector
@@ -48,17 +49,20 @@ public class RobberBehaviour : MonoBehaviour
         Leaf goToDiammond = new Leaf("Go To Diamond", GoToDiamond);
         Leaf goToVan = new Leaf("Go To Van", GoToVan);
         
-        //Selector
+        //INVERTER
+        invertHasMoney.AddChild(hasGotMoney);
+        
+        //SELECTOR
         openDoor.AddChild(goToFrontDoor); //Choose this at first because of the order
         openDoor.AddChild(goToBackDoor);
         
-        //Sequence
-        steal.AddChild(hasGotMoney); //Conditional if agent does not have money, then he proceed to steal
+        //SEQUENCE
+        steal.AddChild(invertHasMoney);
         steal.AddChild(openDoor); //selector
         steal.AddChild(goToDiammond);
         steal.AddChild(goToVan);
         
-        //Behaviour Tree
+        //BEHAVIOUR TREE
         tree.AddChild(steal);
         
         tree.PrintTree();
@@ -66,14 +70,15 @@ public class RobberBehaviour : MonoBehaviour
 
     //AGENT ACTIONS
 
+    /*This function is going to invert the status returned to make more sense*/
     public Node.Status HasMoney()
     {
-        if (money >= 500)
+        if (money < 500)
         {
-            return Node.Status.FAILURE;
+            return Node.Status.FAILURE; //invert SUCCESS
         }
 
-        return Node.Status.SUCCESS;
+        return Node.Status.SUCCESS; //invert FAILURE
     }
     public Node.Status GoToBackDoor()
     {
