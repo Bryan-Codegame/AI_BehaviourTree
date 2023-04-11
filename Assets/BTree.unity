@@ -1531,6 +1531,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &504658317 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4377125553480240239, guid: b79d0b13355dc8f44b7956db61a82656, type: 3}
+  m_PrefabInstance: {fileID: 642336159}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &524558653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,7 +1950,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1971,8 +1976,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diamond: {fileID: 1550492363}
   van: {fileID: 2135263251}
+  attachPos: {fileID: 504658317}
   backDoor: {fileID: 919599686}
   frontDoor: {fileID: 1791870521}
+  money: 195
 --- !u!1 &716268924
 GameObject:
   m_ObjectHideFlags: 0
@@ -2561,6 +2568,7 @@ GameObject:
   - component: {fileID: 919599688}
   - component: {fileID: 919599687}
   - component: {fileID: 919599691}
+  - component: {fileID: 919599692}
   m_Layer: 0
   m_Name: BackDoor
   m_TagString: Untagged
@@ -2660,6 +2668,19 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &919599692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919599686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20355f72525b74a42bd72499befd0710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isLocked: 0
 --- !u!1 &925317490
 GameObject:
   m_ObjectHideFlags: 0
@@ -5171,6 +5192,7 @@ GameObject:
   - component: {fileID: 1791870523}
   - component: {fileID: 1791870522}
   - component: {fileID: 1791870526}
+  - component: {fileID: 1791870527}
   m_Layer: 0
   m_Name: FrontDoor
   m_TagString: Untagged
@@ -5270,6 +5292,19 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &1791870527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791870521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20355f72525b74a42bd72499befd0710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isLocked: 1
 --- !u!4 &1796479289 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a5028766c6c2448878d200bb33de1f59, type: 3}
